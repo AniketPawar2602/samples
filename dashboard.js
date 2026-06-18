@@ -1,51 +1,44 @@
-let email =
-sessionStorage.getItem("email");
+// Get logged-in user details from localStorage
 
+let email = localStorage.getItem("email");
 
-let firstName =
-sessionStorage.getItem("firstName");
+let firstName = localStorage.getItem("firstName");
 
+let lastName = localStorage.getItem("lastName");
 
-let lastName =
-sessionStorage.getItem("lastName");
-
-
-let userType =
-sessionStorage.getItem("userType");
+let userType = localStorage.getItem("userType");
 
 
 
+// Display welcome message
 
-// Display user information
-
-document.getElementById("welcomeMessage")
-.innerHTML =
+document.getElementById("welcomeMessage").innerHTML =
 "Welcome, " + firstName + " " + lastName;
 
 
 
-if(userType === "A"){
+
+// Display role
+
+if(userType === "A") {
 
 
-    document.getElementById("roleMessage")
-    .innerHTML =
+    document.getElementById("roleMessage").innerHTML =
     "Logged in as : ADMIN";
 
 
 }
+else {
 
-else{
 
-
-    document.getElementById("roleMessage")
-    .innerHTML =
+    document.getElementById("roleMessage").innerHTML =
     "Logged in as : USER";
 
 
     // Hide download button for normal user
 
     document.getElementById("downloadBtn")
-    .style.display="none";
+    .style.display = "none";
 
 
 }
@@ -53,16 +46,15 @@ else{
 
 
 
+// Show Existing User Button Function
 
 function showExistingUsers(){
-
 
 
     let url;
 
 
-
-    // Admin
+    // Admin case
 
     if(userType === "A"){
 
@@ -74,19 +66,16 @@ function showExistingUsers(){
     }
 
 
-    // Normal User
+    // Normal User case
 
     else{
 
 
         url =
-        "http://localhost:8080/api/users/"
-        +
-        email;
+        "http://localhost:8080/api/users/" + email;
 
 
     }
-
 
 
 
@@ -96,11 +85,11 @@ function showExistingUsers(){
 
 
 
-    .then(response=>response.json())
+    .then(response => response.json())
 
 
 
-    .then(data=>{
+    .then(data => {
 
 
 
@@ -108,46 +97,35 @@ function showExistingUsers(){
         document.getElementById("userTable");
 
 
-
-        table.innerHTML="";
-
+        table.innerHTML = "";
 
 
-        // Admin returns Array
+
+
+        // Admin receives list of users
 
         if(Array.isArray(data)){
 
 
 
-            data.forEach(user=>{
+            data.forEach(user => {
 
 
-                table.innerHTML +=
 
-                `
+                table.innerHTML += `
+
                 <tr>
 
-                <td>
-                ${user.firstName}
-                </td>
+                    <td>${user.firstName}</td>
 
+                    <td>${user.lastName}</td>
 
-                <td>
-                ${user.lastName}
-                </td>
+                    <td>${user.email}</td>
 
-
-                <td>
-                ${user.email}
-                </td>
-
-
-                <td>
-                ${user.mobileNumber}
-                </td>
-
+                    <td>${user.mobileNumber}</td>
 
                 </tr>
+
                 `;
 
 
@@ -158,38 +136,27 @@ function showExistingUsers(){
         }
 
 
-        // User returns single object
 
-        else{
+        // Normal user receives single user object
+
+        else {
 
 
 
-            table.innerHTML =
+            table.innerHTML = `
 
-            `
             <tr>
 
-            <td>
-            ${data.firstName}
-            </td>
+                <td>${data.firstName}</td>
 
+                <td>${data.lastName}</td>
 
-            <td>
-            ${data.lastName}
-            </td>
+                <td>${data.email}</td>
 
-
-            <td>
-            ${data.email}
-            </td>
-
-
-            <td>
-            ${data.mobileNumber}
-            </td>
-
+                <td>${data.mobileNumber}</td>
 
             </tr>
+
             `;
 
 
@@ -201,10 +168,13 @@ function showExistingUsers(){
 
 
 
-    .catch(error=>{
+    .catch(error => {
 
 
         console.log(error);
+
+
+        alert("Unable to fetch user data");
 
 
     });
@@ -218,6 +188,7 @@ function showExistingUsers(){
 
 
 
+// Admin CSV Download
 
 function downloadCSV(){
 
@@ -234,15 +205,15 @@ function downloadCSV(){
 
 
 
+// Logout
 
 function logout(){
 
 
-    sessionStorage.clear();
+    localStorage.clear();
 
 
-    window.location.href =
-    "login.html";
+    window.location.href = "login.html";
 
 
 }
